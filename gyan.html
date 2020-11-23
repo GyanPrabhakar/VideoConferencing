@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Video Confrenssing </title>
+
+        <style>
+
+            #toggle-heart {
+                display: none;
+            }
+
+            #toggle-heart:checked + label {
+                color: #e2264d;
+                will-change: font-size;
+                animation: heart 1s cubic-bezier(0.17, 0.89, 0.32, 1.49);
+            }
+
+            #toggle-heart + label {
+                align-self: center;
+                position: relative;
+                color: #aab8c2;
+                font-size: 2em;
+                cursor: pointer;
+            }
+
+            #toggle-like {
+                display: none;
+            }
+
+            #toggle-like:checked + label {
+                color: #e2d526;
+                will-change: font-size;
+                animation: heart 1s cubic-bezier(0.17, 0.89, 0.32, 1.49);
+            }
+
+            #toggle-like + label {
+                align-self: center;
+                position: relative;
+                color: #aab8c2;
+                font-size: 2em;
+                cursor: pointer;
+            }
+
+            #toggle-sad {
+                display: none;
+            }
+
+            #toggle-sad:checked + label {
+                color: #e26b26;
+                will-change: font-size;
+                animation: heart 1s cubic-bezier(0.17, 0.89, 0.32, 1.49);
+            }
+
+            #toggle-sad + label {
+                align-self: center;
+                position: relative;
+                color: #aab8c2;
+                font-size: 2em;
+                cursor: pointer;
+            }
+
+                @keyframes heart {
+                    0%, 17.5% {
+                        font-size: 0;
+                    }
+                }
+        </style>
+
+        <style>
+            #divMain {
+                position: fixed;
+                width: 100%;
+                height: 90%;
+                left: 0;
+                top: 10%;
+                overflow: hidden;
+                display: inline-flex;
+            }
+            nav {                
+                position: fixed;
+                width: 100%;
+                height: 10%;
+                left: 0;
+                top: 0;
+                overflow: hidden;
+                display: inline-flex;
+                background-color: aqua;
+            }
+
+            #participantDiv {
+                position: absolute;
+                width: 30%;
+                height: 100%;
+                background-color: cadetblue;
+                display: block;                
+                min-width: 250px;
+            }
+
+            #videoScreen {
+                position: absolute;
+                width: 70%;
+                height: 100%;
+                left: 30%;
+                background-color: #000000;
+            }
+
+            #videoScreen > video {
+                width: 100%;
+                height: auto;
+                max-height: 100%;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                border: 0;
+                outline: 0;
+            }
+
+            #videoFooter {
+                width: fit-content;
+                padding-top: 5px;
+                padding-bottom: 5px;
+                padding-right: 25px;
+                padding-left: 25px;
+                display: inline-flex;
+                height: 35px;
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                background: radial-gradient(at bottom left, #ffffff7a 10%, #ffffff54 30%, #ffffff14 60%,  #ffffff04 74%, #ffffff00 20%);
+                min-width: 150px;
+            }
+
+            #participantTopBar,
+            #participantSection,
+            #participantFooter {
+                width: 100%;
+                left: 0;
+                position: absolute;
+            }
+
+            #participantTopBar {
+                top: 0;
+                height: 10%;
+                background-image: linear-gradient(180deg, #ffffff 60%, #ffffff00);
+                z-index: 1;
+            }
+
+            #participantSection {
+                top: 0%;
+                bottom: 10%;
+                height: 90%;
+                background-color: aliceblue;
+                z-index: 0;
+                overflow-y: auto;
+                padding-top: 10%;
+            }
+
+            /* Let's get this party started */
+            #participantSection::-webkit-scrollbar {
+                width: 10px;
+                margin-right: 2px;
+            }
+            
+            /* Track */
+            #participantSection::-webkit-scrollbar-track {
+                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+                -webkit-border-radius: 10px;
+                border-radius: 10px;
+            }
+            
+            /* Handle */
+            #participantSection::-webkit-scrollbar-thumb {
+                -webkit-border-radius: 10px;
+                border-radius: 10px;
+                background: rgba(70, 70, 70, 0.8); 
+                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+            }
+            #participantSection::-webkit-scrollbar-thumb:window-inactive {
+                background: rgba(0, 217, 255, 0.4); 
+            }
+
+            #participantFooter {
+                bottom: 0;
+                height: 10%;
+                background-color: white;
+                border-top: 1px solid silver;
+            }
+
+            #participantFooter > input {
+                width: calc(90% - 50px);
+                height: 90%;
+                margin: 1% 5%;
+                border-radius: 50px;
+                background-color: aliceblue;
+                color: gray;
+                border: 0;
+                outline: 0;
+                padding-right: 50px;
+                font-family: cursive;
+                font-size: 17px;
+            }
+
+            #participantFooter > span {
+                position: absolute;
+                right: 5%;
+                top: 1%;
+                height: 50px;
+                width: 50px;
+                cursor: pointer;
+                font-size: xxx-large;
+                color: gray;
+            }
+
+            .participant {
+                width: 90%;
+                margin: 0 5%;
+                padding: 2%;
+                display: inline-flex;
+                border-bottom: 0.5px solid silver;
+                transition: 0.2s;
+                cursor: pointer;
+            }
+
+
+            .participant:hover {                
+                box-shadow: 0 10px 5px gray;
+            }
+
+            .participantPic {
+                width: 25%;
+                height: 100%;
+            }
+
+
+            .participantPic > img {
+                width: 50px;
+                height: auto;
+                max-width: 100%;
+            }
+
+            .participantData {
+                width: 50%;
+                height: 100%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                min-height: 50px;
+                font-family: cursive;
+            }
+
+            .participantData > h3 {
+                margin: 0;
+            }
+
+            .participantData > p {
+                margin: 0;
+            }
+
+            .participantOtherDetails {
+                width: 25%;
+                height: 100%;
+            }
+
+            .participantOtherDetails > p {
+                color: gray;
+                position: absolute;
+                right: 10px;
+            }
+
+        </style>
+
+    </head>
+    <body>
+
+        <nav>
+
+        </nav>
+        
+        <div id="divMain">
+            <div id="participantDiv">
+                <div id="participantTopBar">
+                    
+                </div>
+                <div id="participantSection">
+
+                    <div class="participant">
+                        <div class="participantPic">
+                            <img src="https://www.edatingdoc.com/wp-content/thesis/skins/edatingdoc/images/radio-sidebar.png" />
+                        </div>
+                        <div class="participantData">
+                            <h3>Gyan Prabhakar</h3>
+                            <p style="color: grey;">Hello Every One</p>
+                        </div>
+                        <div class="participantOtherDetails">
+                            <p>00:56</p>
+                        </div>
+                    </div>  
+
+                    <div class="participant">
+                        <div class="participantPic">
+                            <img src="https://www.edatingdoc.com/wp-content/thesis/skins/edatingdoc/images/radio-sidebar.png" />
+                        </div>
+                        <div class="participantData">
+                            <h3>Gyan Prabhakar</h3>
+                            <p style="color: grey;">Hello Every One</p>
+                        </div>
+                        <div class="participantOtherDetails">
+                            <p>00:56</p>
+                        </div>
+                    </div>  
+
+
+                    <div class="participant">
+                        <div class="participantPic">
+                            <img src="https://www.edatingdoc.com/wp-content/thesis/skins/edatingdoc/images/radio-sidebar.png" />
+                        </div>
+                        <div class="participantData">
+                            <h3>Gyan Prabhakar</h3>
+                            <p style="color: grey;">Hello Every One</p>
+                        </div>
+                        <div class="participantOtherDetails">
+                            <p>00:56</p>
+                        </div>
+                    </div>  
+
+
+                    <div class="participant">
+                        <div class="participantPic">
+                            <img src="https://www.edatingdoc.com/wp-content/thesis/skins/edatingdoc/images/radio-sidebar.png" />
+                        </div>
+                        <div class="participantData">
+                            <h3>Gyan Prabhakar</h3>
+                            <p style="color: grey;">Hello Every One</p>
+                        </div>
+                        <div class="participantOtherDetails">
+                            <p>00:56</p>
+                        </div>
+                    </div>  
+
+
+                    <div class="participant">
+                        <div class="participantPic">
+                            <img src="https://www.edatingdoc.com/wp-content/thesis/skins/edatingdoc/images/radio-sidebar.png" />
+                        </div>
+                        <div class="participantData">
+                            <h3>Gyan Prabhakar</h3>
+                            <p style="color: grey;">Hello Every One</p>
+                        </div>
+                        <div class="participantOtherDetails">
+                            <p>00:56</p>
+                        </div>
+                    </div>  
+
+
+                    <div class="participant">
+                        <div class="participantPic">
+                            <img src="https://www.edatingdoc.com/wp-content/thesis/skins/edatingdoc/images/radio-sidebar.png" />
+                        </div>
+                        <div class="participantData">
+                            <h3>Gyan Prabhakar</h3>
+                            <p style="color: grey;">Hello Every One</p>
+                        </div>
+                        <div class="participantOtherDetails">
+                            <p>00:56</p>
+                        </div>
+                    </div>  
+
+
+                    <div class="participant">
+                        <div class="participantPic">
+                            <img src="https://www.edatingdoc.com/wp-content/thesis/skins/edatingdoc/images/radio-sidebar.png" />
+                        </div>
+                        <div class="participantData">
+                            <h3>Gyan Prabhakar</h3>
+                            <p style="color: grey;">Hello Every One</p>
+                        </div>
+                        <div class="participantOtherDetails">
+                            <p>00:56</p>
+                        </div>
+                    </div>  
+
+
+                    <div class="participant">
+                        <div class="participantPic">
+                            <img src="https://www.edatingdoc.com/wp-content/thesis/skins/edatingdoc/images/radio-sidebar.png" />
+                        </div>
+                        <div class="participantData">
+                            <h3>Gyan Prabhakar</h3>
+                            <p style="color: grey;">Hello Every One</p>
+                        </div>
+                        <div class="participantOtherDetails">
+                            <p>00:56</p>
+                        </div>
+                    </div>  
+
+
+                    <div class="participant">
+                        <div class="participantPic">
+                            <img src="https://www.edatingdoc.com/wp-content/thesis/skins/edatingdoc/images/radio-sidebar.png" />
+                        </div>
+                        <div class="participantData">
+                            <h3>Gyan Prabhakar</h3>
+                            <p style="color: grey;">Hello Every One</p>
+                        </div>
+                        <div class="participantOtherDetails">
+                            <p>00:56</p>
+                        </div>
+                    </div>  
+
+
+                    <div class="participant">
+                        <div class="participantPic">
+                            <img src="https://www.edatingdoc.com/wp-content/thesis/skins/edatingdoc/images/radio-sidebar.png" />
+                        </div>
+                        <div class="participantData">
+                            <h3>Gyan Prabhakar</h3>
+                            <p style="color: grey;">Hello Every One</p>
+                        </div>
+                        <div class="participantOtherDetails">
+                            <p>00:56</p>
+                        </div>
+                    </div>  
+
+
+                    <div class="participant">
+                        <div class="participantPic">
+                            <img src="https://www.edatingdoc.com/wp-content/thesis/skins/edatingdoc/images/radio-sidebar.png" />
+                        </div>
+                        <div class="participantData">
+                            <h3>Gyan Prabhakar</h3>
+                            <p style="color: grey;">Hello Every One</p>
+                        </div>
+                        <div class="participantOtherDetails">
+                            <p>00:56</p>
+                        </div>
+                    </div>  
+
+
+                    <div class="participant">
+                        <div class="participantPic">
+                            <img src="https://www.edatingdoc.com/wp-content/thesis/skins/edatingdoc/images/radio-sidebar.png" />
+                        </div>
+                        <div class="participantData">
+                            <h3>Gyan Prabhakar</h3>
+                            <p style="color: grey;">Hello Every One</p>
+                        </div>
+                        <div class="participantOtherDetails">
+                            <p>00:56</p>
+                        </div>
+                    </div>  
+
+                    <div class="participant">
+                        <div class="participantPic">
+                            <img src="https://www.edatingdoc.com/wp-content/thesis/skins/edatingdoc/images/radio-sidebar.png" />
+                        </div>
+                        <div class="participantData">
+                            <h3>Gyan Prabhakar</h3>
+                            <p style="color: grey;">Hello Every One</p>
+                        </div>
+                        <div class="participantOtherDetails">
+                            <p>00:56</p>
+                        </div>
+                    </div>   
+
+                </div>
+                <div id="participantFooter">
+                    <input type="text" placeholder="Type Text" />
+                    <span>&#x27A4;</span>
+                </div>
+            </div>
+            <div id="videoScreen">
+                <video src="https://file-examples-com.github.io/uploads/2017/04/file_example_MP4_480_1_5MG.mp4" autoplay controls></video>
+                <div id="videoFooter">
+                    <input id="toggle-heart" type="checkbox"/>
+                    <label for="toggle-heart">❤</label>
+                    <input id="toggle-like" type="checkbox"/>
+                    <label for="toggle-like">👍</label>
+                    <input id="toggle-sad" type="checkbox"/>
+                    <label for="toggle-sad">❤</label>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
